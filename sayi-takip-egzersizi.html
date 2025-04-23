@@ -196,15 +196,11 @@
         
         .input-area {
             position: absolute;
-            bottom: 100px;  /* Daha yukarıda konumlandır */
+            bottom: 90px;
             left: 0;
             right: 0;
             text-align: center;
             display: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
         }
         
         .number-input {
@@ -580,7 +576,7 @@
             <div class="number-display" id="numberDisplay">0</div>
             
             <div class="input-area" id="inputArea">
-                <input type="text" class="number-input" id="numberInput" placeholder="Sayıları aralarında boşluk bırakarak girin" inputmode="numeric">
+                <input type="text" class="number-input" id="numberInput" placeholder="Sayıları boşluk bırakarak girin" inputmode="numeric">
                 <div class="action-buttons">
                     <button class="action-btn submit-btn" id="submitButton">Gönder</button>
                     <button class="action-btn clear-btn" id="clearButton">Temizle</button>
