@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Sayı Takip Egzersizi | Beyin Enstitüsü</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary-color: #7209b7;
+            --success-color: #06d6a0;
+            --danger-color: #ef476f;
+            --warning-color: #ffd166;
+            --dark-color: #2b2d42;
+            --light-color: #f8f9fa;
+            --gray-color: #e9ecef;
+            --gray-dark: #adb5bd;
+        }
+        
+        * {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: var(--dark-color);
+            overscroll-behavior: none;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 24px;
+        }
+        
+        .exercise-info {
+            background-color: white;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 12px 0;
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .toolbar {
+            background-color: white;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 12px;
+            align-items: center;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-btn {
+            background: var(--light-color);
+            border: 1px solid var(--gray-color);
+            border-radius: 6px;
+            padding: 0;
+            display: flex;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        
+        .dropdown-btn:hover, .dropdown-btn:active {
+            background: var(--gray-color);
+        }
+        
+        .dropdown-title {
+            border-right: 1px solid var(--gray-color);
+            padding: 8px 10px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .dropdown-arrow {
+            padding: 8px;
+            color: var(--primary-color);
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            min-width: 160px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 6;
+            border-radius: 6px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .dropdown-content a {
+            color: var(--dark-color);
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            transition: background 0.2s ease;
+        }
+        
+        .dropdown-content a:hover, .dropdown-content a:active {
+            background-color: var(--gray-color);
+            color: var(--primary-color);
+        }
+        
+        .info-bar {
+            background: linear-gradient(to right, var(--dark-color), #3a455c);
+            color: white;
+            height: 36px;
+            line-height: 36px;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .info-text {
+            padding: 0 15px;
+            font-weight: 500;
+        }
+        
+        .timer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0 20px;
+            border-radius: 0 8px 8px 0;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        
+        .exercise-area {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 460px;
+            margin: 8px auto;
+            background-color: white;
+            border-radius: 12px;
+            overflow: visible;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .number-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 120px;
+            font-weight: bold;
+            color: var(--primary-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            user-select: none;
+        }
+        
+        .input-area {
+            position: absolute;
+            bottom: 90px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            display: none;
+        }
+        
+        .number-input {
+            padding: 10px 15px;
+            font-size: 18px;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            width: 300px;
+            max-width: 90%;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .action-buttons {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .action-btn {
+            padding: 12px 40px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .action-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .submit-btn {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .clear-btn {
+            background-color: var(--warning-color);
+            color: var(--dark-color);
+        }
+        
+        .feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 24px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(rgba(43, 45, 66, 0.8), rgba(114, 9, 183, 0.8));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        
+        .start-button, .stop-button {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin: 5px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .start-button:active, .stop-button:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .stop-button {
+            background: linear-gradient(to right, var(--danger-color), #d64161);
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+            z-index: 5;
+            display: none;
+        }
+        
+        .countdown {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+            background: white;
+            font-size: 70px;
+            color: var(--primary-color);
+            border: 3px solid var(--primary-color);
+            display: none;
+            z-index: 20;
+            border-radius: 50%;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            font-weight: bold;
+            pointer-events: none;
+        }
+        
+        .completion-message {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 30px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            height: auto;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .completion-title {
+            color: var(--dark-color);
+            font-size: 28px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .result-stats {
+            background-color: var(--light-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: left;
+            font-size: 15px;
+        }
+        
+        .result-stats p {
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .result-stats p span {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .progress-bar {
+            height: 24px;
+            background-color: var(--gray-color);
+            border-radius: 12px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-value {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 12px;
+            text-align: center;
+            line-height: 24px;
+            color: white;
+            font-weight: 600;
+            transition: width 1s ease;
+        }
+        
+        .restart-button {
+            background: linear-gradient(to right, var(--success-color), #3cb371);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.2s ease;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .restart-button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stats-container {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .stats-container div {
+            margin: 5px 0;
+        }
+        
+        .stats-container span {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .navbar {
+            background: var(--primary-dark);
+            padding: 15px 0;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .back-button {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Mobil cihazlar için ek düzenlemeler */
+        @media (max-width: 768px) {
+            .number-display {
+                font-size: 100px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+                bottom: 15px;
+                gap: 10px;
+            }
+            
+            .action-btn {
+                width: 80%;
+                padding: 10px;
+            }
+            
+            .number-input {
+                width: 90%;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .completion-message {
+                padding: 15px;
+                width: 85%;
+            }
+            
+            .result-stats {
+                padding: 10px;
+                font-size: 14px;
+            }
+            
+            .completion-title {
+                font-size: 22px;
+                margin-bottom: 15px;
+            }
+            
+            .number-display {
+                font-size: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Beyin Enstitüsü</a>
+            <a href="index.html" class="back-button">← Tüm Egzersizler</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>Sayı Takip Egzersizi</h1>
+        </header>
+        
+        <div class="exercise-info">
+            Bu egzersiz, kısa süreli belleğinizi ve sayısal dikkatinizi geliştirmeyi amaçlar. 
+            Ekranda art arda gösterilen sayıları hatırlamanız ve doğru sırada girmeniz gerekmektedir.
+            Zorluk seviyesi arttıkça hatırlamanız gereken sayı miktarı artacaktır.
+            <br><br>
+            <strong>Her seviyede hatırlamanız gereken sayı adedi artacak ve egzersiz giderek zorlaşacaktır.</strong>
+        </div>
+        
+        <div class="toolbar">
+            <div class="dropdown">
+                <button class="dropdown-btn" id="durationBtn">
+                    <div class="dropdown-title" id="selectedDuration">1:00</div>
+                    <div class="dropdown-arrow">▾</div>
+                </button>
+                <div id="durationDropdown" class="dropdown-content">
+                    <a href="#" id="duration60">1:00</a>
+                    <a href="#" id="duration120">2:00</a>
+                    <a href="#" id="duration180">3:00</a>
+                    <a href="#" id="duration240">4:00</a>
+                    <a href="#" id="duration300">5:00</a>
+                </div>
+            </div>
+            
+            <div class="dropdown">
+                <button class="dropdown-btn" id="levelBtn">
+                    <div class="dropdown-title" id="selectedLevel">3. Seviye</div>
+                    <div class="dropdown-arrow">▾</div>
+                </button>
+                <div id="levelDropdown" class="dropdown-content">
+                    <a href="#" id="level1">1. Seviye (Kolay)</a>
+                    <a href="#" id="level2">2. Seviye</a>
+                    <a href="#" id="level3">3. Seviye (Orta)</a>
+                    <a href="#" id="level4">4. Seviye</a>
+                    <a href="#" id="level5">5. Seviye (Zor)</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-bar">
+            <span class="info-text">Sayıları sırasıyla hatırlayın!</span>
+            <span class="timer" id="timer">01:00</span>
+        </div>
+        
+        <div class="exercise-area">
+            <button class="stop-button" id="stopButton">Egzersizi Durdur</button>
+            
+            <div class="number-display" id="numberDisplay">0</div>
+            
+            <div class="input-area" id="inputArea">
+                <input type="text" class="number-input" id="numberInput" placeholder="Sayıları aralarında boşluk bırakarak girin" inputmode="numeric">
+                <div class="action-buttons">
+                    <button class="action-btn submit-btn" id="submitButton">Gönder</button>
+                    <button class="action-btn clear-btn" id="clearButton">Temizle</button>
+                </div>
+            </div>
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <div class="stats-container" id="statsContainer" style="display: none;">
+                <div>Doğru: <span id="correctCount">0</span></div>
+                <div>Yanlış: <span id="wrongCount">0</span></div>
+                <div>Seviye: <span id="currentLevelDisplay">1</span></div>
+                <div>Sayı Adedi: <span id="currentNumberCountDisplay">3</span></div>
+            </div>
+            
+            <div class="overlay" id="startOverlay">
+                <button class="start-button" id="startButton">Egzersizi Başlat</button>
+            </div>
+            
+            <div class="countdown" id="countdown">3</div>
+            
+            <div id="completionOverlay" class="overlay" style="display: none;">
+                <div class="completion-message">
+                    <h2 class="completion-title">Egzersiz Tamamlandı!</h2>
+                    <div class="result-stats">
+                        <p>Toplam Test: <span id="totalTrials">0</span></p>
+                        <p>Doğru: <span id="finalCorrect">0</span></p>
+                        <p>Yanlış: <span id="finalWrong">0</span></p>
+                        <p>Ulaşılan Seviye: <span id="finalLevel">1</span></p>
+                        <p>Maksimum Sayı Adedi: <span id="maxNumbers">3</span></p>
+                        <p>Başarı Yüzdesi:</p>
+                        <div class="progress-bar">
+                            <div class="progress-value" id="successRate">0%</div>
+                        </div>
+                    </div>
+                    <button class="restart-button" id="restartButton">Yeni Egzersiz Başlat</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Egzersiz ayarları
+        let duration = 60;  // saniye
+        let level = 3;
+        let exerciseStarted = false;
+        let currentSequence = [];
+        let trialCount = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let currentDisplayIndex = 0;
+        let displayTimer;
+        
+        // Progressif zorlaştırma için değişkenler
+        let currentLevel = 1;
+        let baseNumberCount = 3; // başlangıç sayı adedi
+        let maxLevel = 10; // maksimum seviye
+        let numberIncreasePerLevel = 1; // her seviyede kaç sayı eklenecek
+        
+        // Zamanlayıcılar
+        let exerciseTimer;
+        let countdownTimer;
+        let answerTimer;
+        let remainingTime = 60;
+        
+        // Zorluk seviyesine göre sayı gösterme süreleri (ms)
+        const displayDurations = [1200, 1000, 800, 700, 600];
+        
+        // Mobil cihaz tespiti
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        // Sayfa yüklendiğinde çalışacak
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event listener'ları ekle
+            setupEventListeners();
+            
+            // Mobil cihaz optimizasyonları
+            if (isMobile) {
+                setupMobileOptimizations();
+            }
+            
+            // Dokunma olayı sorununu düzelt
+            preventTouchProblems();
+        });
+        
+        // Tüm olay dinleyicileri ekle
+        function setupEventListeners() {
+            // Dropdown menüler
+            document.getElementById('durationBtn').addEventListener('click', function() {
+                toggleDropdown('durationDropdown');
+            });
+            
+            document.getElementById('levelBtn').addEventListener('click', function() {
+                toggleDropdown('levelDropdown');
+            });
+            
+            // Süre seçenekleri
+            document.getElementById('duration60').addEventListener('click', function(e) {
+                e.preventDefault();
+                setDuration(60);
+            });
+            
+            document.getElementById('duration120').addEventListener('click', function(e) {
+                e.preventDefault();
+                setDuration(120);
+            });
+            
+            document.getElementById('duration180').addEventListener('click', function(e) {
+                e.preventDefault();
+                setDuration(180);
+            });
+            
+            document.getElementById('duration240').addEventListener('click', function(e) {
+                e.preventDefault();
+                setDuration(240);
+            });
+            
+            document.getElementById('duration300').addEventListener('click', function(e) {
+                e.preventDefault();
+                setDuration(300);
+            });
+            
+            // Seviye seçenekleri
+            document.getElementById('level1').addEventListener('click', function(e) {
+                e.preventDefault();
+                setLevel(1);
+            });
+            
+            document.getElementById('level2').addEventListener('click', function(e) {
+                e.preventDefault();
+                setLevel(2);
+            });
+            
+            document.getElementById('level3').addEventListener('click', function(e) {
+                e.preventDefault();
+                setLevel(3);
+            });
+            
+            document.getElementById('level4').addEventListener('click', function(e) {
+                e.preventDefault();
+                setLevel(4);
+            });
+            
+            document.getElementById('level5').addEventListener('click', function(e) {
+                e.preventDefault();
+                setLevel(5);
+            });
+            
+            // Butonlar
+            document.getElementById('startButton').addEventListener('click', startExercise);
+            document.getElementById('stopButton').addEventListener('click', stopExercise);
+            document.getElementById('submitButton').addEventListener('click', submitAnswer);
+            document.getElementById('clearButton').addEventListener('click', clearInput);
+            document.getElementById('restartButton').addEventListener('click', resetExercise);
+            
+            // Input enter tuşu
+            document.getElementById('numberInput').addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    submitAnswer();
+                }
+            });
+            
+            // Dışarıya tıklandığında dropdown menüleri kapat
+            document.addEventListener('click', function(event) {
+                // Dropdown düğmeleri dışında bir yere tıklandıysa
+                if (!event.target.closest('.dropdown-btn') && !event.target.closest('.dropdown-content')) {
+                    // Tüm dropdown menüleri kapat
+                    const dropdowns = document.getElementsByClassName('dropdown-content');
+                    for (let i = 0; i < dropdowns.length; i++) {
+                        dropdowns[i].style.display = 'none';
+                    }
+                }
+            });
+        }
+        
+        // Mobil cihazlar için ek optimizasyonlar
+        function setupMobileOptimizations() {
+            console.log("Mobil cihaz tespit edildi, dokunma olayları ekleniyor");
+            
+            // Dokunma olayları ekle
+            document.getElementById('startButton').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                startExercise();
+            });
+            
+            document.getElementById('stopButton').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                stopExercise();
+            });
+            
+            document.getElementById('submitButton').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                submitAnswer();
+            });
+            
+            document.getElementById('clearButton').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                clearInput();
+            });
+            
+            document.getElementById('restartButton').addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                resetExercise();
+            });
+        }
+        
+        // Dokunma sorunlarını önle
+        function preventTouchProblems() {
+            // Mobil sürükleme ve kaydırma sorunlarını önle
+            document.addEventListener('touchmove', function(e) {
+                if (e.target.closest('.action-btn') || e.target.closest('.start-button') || 
+                    e.target.closest('.stop-button') || e.target.closest('.restart-button')) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            // Çift dokunma yakınlaştırmasını engelle
+            document.addEventListener('touchend', function(e) {
+                const now = Date.now();
+                const lastTouch = window.lastTouchEnd || now;
+                const delta = now - lastTouch;
+                if (delta < 300 && e.touches.length === 0) {
+                    e.preventDefault();
+                }
+                window.lastTouchEnd = now;
+            }, false);
+        }
+        
+        // Dropdown menüyü aç/kapat
+        function toggleDropdown(id) {
+            if (exerciseStarted) return;
+            
+            const dropdown = document.getElementById(id);
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            
+            // Diğer açık dropdown'ları kapat
+            const dropdowns = document.getElementsByClassName('dropdown-content');
+            for (let i = 0; i < dropdowns.length; i++) {
+                if (dropdowns[i].id !== id) {
+                    dropdowns[i].style.display = 'none';
+                }
+            }
+        }
+        
+        // Egzersiz süresini ayarla
+        function setDuration(seconds) {
+            duration = seconds;
+            remainingTime = seconds;
+            document.getElementById("selectedDuration").innerText = formatTime(seconds);
+            document.getElementById("timer").innerText = formatTime(seconds);
+            document.getElementById("durationDropdown").style.display = "none";
+        }
+        
+        // Zorluk seviyesini ayarla
+        function setLevel(newLevel) {
+            level = newLevel;
+            document.getElementById("selectedLevel").innerText = `${newLevel}. Seviye`;
+            document.getElementById("levelDropdown").style.display = "none";
+        }
+        
+        // Zamanı MM:SS formatında göster
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+        
+        // Rastgele sayı üret
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        // Yeni sayı dizisi oluştur
+        function generateNumberSequence() {
+            const currentNumberCount = baseNumberCount + (currentLevel - 1) * numberIncreasePerLevel;
+            const newSequence = [];
+            
+            for (let i = 0; i < currentNumberCount; i++) {
+                newSequence.push(getRandomNumber(1, 9));
+            }
+            
+            return newSequence;
+        }
+        
+        // Sayıları göster
+        function displayNumberSequence() {
+            currentDisplayIndex = 0;
+            const numberDisplay = document.getElementById('numberDisplay');
+            
+            // İlk sayıyı göster
+            numberDisplay.textContent = currentSequence[currentDisplayIndex];
+            numberDisplay.style.opacity = 1;
+            
+            // Her sayı gösterildikten sonra bir sonrakine geç
+            displayTimer = setInterval(() => {
+                // Sayıyı gizle
+                numberDisplay.style.opacity = 0;
+                
+                // Kısa bir süre bekle
+                setTimeout(() => {
+                    currentDisplayIndex++;
+                    
+                    if (currentDisplayIndex < currentSequence.length) {
+                        // Sonraki sayıyı göster
+                        numberDisplay.textContent = currentSequence[currentDisplayIndex];
+                        numberDisplay.style.opacity = 1;
+                    } else {
+                        // Tüm sayılar gösterildi, girdi alanını göster
+                        clearInterval(displayTimer);
+                        setTimeout(() => {
+                            numberDisplay.style.opacity = 0;
+                            document.getElementById('inputArea').style.display = 'block';
+                            document.getElementById('numberInput').focus();
+                        }, 500);
+                    }
+                }, 300);
+            }, displayDurations[level - 1]);
+        }
+        
+        // Cevabı kontrol et
+        function submitAnswer() {
+            const input = document.getElementById('numberInput').value.trim();
+            
+            // Boş cevap kontrolü
+            if (input === '') {
+                showFeedback('Lütfen bir cevap girin!', '#ffd166');
+                return;
+            }
+            
+            // Girilen sayıları diziye dönüştür
+            const inputArray = input.split(/\s+/).map(Number);
+            
+            // Dizi uzunluğu kontrolü
+            if (inputArray.length !== currentSequence.length) {
+                showFeedback(`${currentSequence.length} sayı girmelisiniz!`, '#ffd166');
+                return;
+            }
+            
+            // Cevabı kontrol et
+            let isCorrect = true;
+            for (let i = 0; i < currentSequence.length; i++) {
+                if (inputArray[i] !== currentSequence[i]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+            
+            // Sonucu göster
+            if (isCorrect) {
+                correctCount++;
+                document.getElementById('correctCount').innerText = correctCount;
+                showFeedback('Doğru!', '#06d6a0');
+                
+                // Seviyeyi artır
+                if (currentLevel < maxLevel) {
+                    currentLevel++;
+                    const currentNumberCount = baseNumberCount + (currentLevel - 1) * numberIncreasePerLevel;
+                    document.getElementById('currentLevelDisplay').innerText = currentLevel;
+                    document.getElementById('currentNumberCountDisplay').innerText = currentNumberCount;
+                    showFeedback(`Seviye ${currentLevel}! Sayı Adedi: ${currentNumberCount}`, '#06d6a0');
+                }
+            } else {
+                wrongCount++;
+                document.getElementById('wrongCount').innerText = wrongCount;
+                showFeedback('Yanlış!', '#ef476f');
+                
+                // Doğru cevabı göster
+                const correctAnswer = currentSequence.join(' ');
+                showFeedback(`Doğru cevap: ${correctAnswer}`, '#4361ee', 2000);
+            }
+            
+            // Giriş alanını temizle ve gizle
+            clearInput();
+            document.getElementById('inputArea').style.display = 'none';
+            
+            // Bir sonraki test için hazırla
+            setTimeout(() => {
+                if (exerciseStarted) {
+                    startNextTrial();
+                }
+            }, 2000);
+        }
+        
+        // Girişi temizle
+        function clearInput() {
+            document.getElementById('numberInput').value = '';
+        }
+        
+        // Bir sonraki testi başlat
+        function startNextTrial() {
+            trialCount++;
+            currentSequence = generateNumberSequence();
+            displayNumberSequence();
+        }
+        
+        // Geri bildirim göster
+        function showFeedback(message, color, duration = 1000) {
+            const feedback = document.getElementById('feedback');
+            feedback.innerText = message;
+            feedback.style.backgroundColor = color;
+            feedback.style.opacity = 1;
+            
+            setTimeout(() => {
+                feedback.style.opacity = 0;
+            }, duration);
+        }
+        
+        // Egzersizi başlat
+        function startExercise() {
+            // Değişkenleri sıfırla
+            exerciseStarted = true;
+            trialCount = 0;
+            correctCount = 0;
+            wrongCount = 0;
+            currentLevel = 1;
+            remainingTime = duration;
+            
+            // İstatistikleri sıfırla ve göster
+            document.getElementById('correctCount').innerText = '0';
+            document.getElementById('wrongCount').innerText = '0';
+            document.getElementById('currentLevelDisplay').innerText = '1';
+            document.getElementById('currentNumberCountDisplay').innerText = baseNumberCount.toString();
+            document.getElementById('statsContainer').style.display = 'block';
+            
+            // Durdurma butonunu göster
+            document.getElementById('stopButton').style.display = 'block';
+            
+            // Başlat overlay'i gizle
+            document.getElementById('startOverlay').style.display = 'none';
+            
+            // Geri sayım başlat
+            const countdownEl = document.getElementById('countdown');
+            countdownEl.style.display = 'block';
+            let countdownValue = 3;
+            
+            countdownTimer = setInterval(() => {
+                countdownValue--;
+                countdownEl.innerText = countdownValue;
+                
+                if (countdownValue === 0) {
+                    clearInterval(countdownTimer);
+                    countdownEl.style.display = 'none';
+                    
+                    // İlk testi başlat
+                    startNextTrial();
+                    
+                    // Zamanlayıcıyı başlat
+                    startTimer();
+                }
+            }, 1000);
+        }
+        
+        // Egzersizi durdur
+        function stopExercise() {
+            // Egzersiz başlamadıysa işlem yapma
+            if (!exerciseStarted) return;
+            
+            // Egzersizi sonlandır
+            endExercise();
+            
+            // Geri bildirim göster
+            showFeedback('Egzersiz durduruldu', '#4361ee');
+        }
+        
+        // Zamanlayıcıyı başlat
+        function startTimer() {
+            exerciseTimer = setInterval(() => {
+                remainingTime--;
+                document.getElementById('timer').innerText = formatTime(remainingTime);
+                
+                if (remainingTime <= 0) {
+                    endExercise();
+                }
+            }, 1000);
+        }
+        
+        // Egzersizi sonlandır
+        function endExercise() {
+            // Egzersiz durumunu güncelle
+            exerciseStarted = false;
+            
+            // Zamanlayıcıları temizle
+            clearInterval(exerciseTimer);
+            clearInterval(displayTimer);
+            clearInterval(countdownTimer);
+            
+            // Giriş alanını gizle
+            document.getElementById('inputArea').style.display = 'none';
+            
+            // Sayı göstericiyi gizle
+            document.getElementById('numberDisplay').style.opacity = 0;
+            
+            // İstatistik kutusunu gizle
+            document.getElementById('statsContainer').style.display = 'none';
+            
+            // Durdurma butonunu gizle
+            document.getElementById('stopButton').style.display = 'none';
+            
+            // Sonuç istatistiklerini hazırla
+            const totalTrials = trialCount;
+            const successRate = totalTrials > 0 ? Math.round((correctCount / totalTrials) * 100) : 0;
+            const finalLevel = currentLevel;
+            const maxNumbers = baseNumberCount + (finalLevel - 1) * numberIncreasePerLevel;
+            
+            // Sonuç değerlerini güncelle
+            document.getElementById('totalTrials').innerText = totalTrials;
+            document.getElementById('finalCorrect').innerText = correctCount;
+            document.getElementById('finalWrong').innerText = wrongCount;
+            document.getElementById('finalLevel').innerText = finalLevel;
+            document.getElementById('maxNumbers').innerText = maxNumbers;
+            document.getElementById('successRate').innerText = `${successRate}%`;
+            document.getElementById('successRate').style.width = `${successRate}%`;
+            
+            // Tamamlama overlay'ini göster
+            document.getElementById('completionOverlay').style.display = 'flex';
+        }
+        
+        // Egzersizi sıfırla
+        function resetExercise() {
+            // Tamamlama overlay'ini gizle
+            document.getElementById('completionOverlay').style.display = 'none';
+            
+            // Başlat overlay'ini göster
+            document.getElementById('startOverlay').style.display = 'flex';
+            
+            // Zamanı sıfırla
+            document.getElementById('timer').innerText = formatTime(duration);
+        }
+    </script>
+</body>
+</html>
